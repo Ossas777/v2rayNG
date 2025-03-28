@@ -10,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/layout_margin_top_height">
+        android:padding="@dimen/padding_spacing_dp16">
 
         <include layout="@layout/layout_address_port" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
             android:orientation="vertical">
 
             <TextView
@@ -28,7 +28,7 @@
             <EditText
                 android:id="@+id/et_id"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edit_height"
+                android:layout_height="wrap_content"
                 android:inputType="text" />
 
         </LinearLayout>
@@ -36,7 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
             android:orientation="vertical">
 
             <TextView
@@ -48,7 +48,7 @@
             <EditText
                 android:id="@+id/et_public_key"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edit_height"
+                android:layout_height="wrap_content"
                 android:inputType="text" />
 
         </LinearLayout>
@@ -56,7 +56,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/server_lab_preshared_key" />
+
+
+            <EditText
+                android:id="@+id/et_preshared_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
             android:orientation="vertical">
 
             <TextView
@@ -72,7 +92,7 @@
                 <EditText
                     android:id="@+id/et_reserved1"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/edit_height"
+                    android:layout_height="wrap_content"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -81,7 +101,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
             android:orientation="vertical">
 
             <TextView
@@ -92,14 +112,14 @@
             <EditText
                 android:id="@+id/et_local_address"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edit_height"
+                android:layout_height="wrap_content"
                 android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
             android:orientation="vertical">
 
             <TextView
@@ -110,7 +130,7 @@
             <EditText
                 android:id="@+id/et_local_mtu"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edit_height"
+                android:layout_height="wrap_content"
                 android:inputType="number" />
 
         </LinearLayout>
@@ -118,8 +138,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_top_height"
-            android:layout_marginBottom="@dimen/layout_margin_top_height"
+            android:layout_marginTop="@dimen/padding_spacing_dp16"
+            android:layout_marginBottom="@dimen/padding_spacing_dp16"
             android:orientation="vertical" />
 
     </LinearLayout>
