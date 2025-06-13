@@ -3,6 +3,7 @@ package com.v2ray.ang.ui
 import android.content.Intent
 import android.graphics.Color
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.helper.ItemTouchHelperAdapter
 import com.v2ray.ang.helper.ItemTouchHelperViewHolder
 import com.v2ray.ang.service.V2RayServiceManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -187,7 +189,7 @@ class MainRecyclerAdapter(val activity: MainActivity) : RecyclerView.Adapter<Mai
                     else -> mActivity.toast("else")
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(AppConfig.TAG, "Error when sharing server", e)
             }
         }.show()
     }
@@ -219,10 +221,15 @@ class MainRecyclerAdapter(val activity: MainActivity) : RecyclerView.Adapter<Mai
      * @param guid The server unique identifier
      */
     private fun shareFullContent(guid: String) {
-        if (AngConfigManager.shareFullContent2Clipboard(mActivity, guid) == 0) {
-            mActivity.toastSuccess(R.string.toast_success)
-        } else {
-            mActivity.toastError(R.string.toast_failure)
+        mActivity.lifecycleScope.launch(Dispatchers.IO) {
+            val result = AngConfigManager.shareFullContent2Clipboard(mActivity, guid)
+            launch(Dispatchers.Main) {
+                if (result == 0) {
+                    mActivity.toastSuccess(R.string.toast_success)
+                } else {
+                    mActivity.toastError(R.string.toast_failure)
+                }
+            }
         }
     }
 
@@ -299,7 +306,7 @@ class MainRecyclerAdapter(val activity: MainActivity) : RecyclerView.Adapter<Mai
                         delay(500)
                         V2RayServiceManager.startVService(mActivity)
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        Log.e(AppConfig.TAG, "Failed to restart V2Ray service", e)
                     }
                 }
             }

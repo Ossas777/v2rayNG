@@ -2,7 +2,6 @@ package com.v2ray.ang.ui
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,13 +13,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.v2ray.ang.AppConfig
-import com.v2ray.ang.AppConfig.ANG_PACKAGE
 import com.v2ray.ang.AppConfig.DEFAULT_PORT
 import com.v2ray.ang.AppConfig.PREF_ALLOW_INSECURE
 import com.v2ray.ang.AppConfig.REALITY
 import com.v2ray.ang.AppConfig.TLS
 import com.v2ray.ang.AppConfig.WIREGUARD_LOCAL_ADDRESS_V4
-import com.v2ray.ang.AppConfig.WIREGUARD_LOCAL_ADDRESS_V6
 import com.v2ray.ang.AppConfig.WIREGUARD_LOCAL_MTU
 import com.v2ray.ang.R
 import com.v2ray.ang.dto.EConfigType
@@ -329,7 +326,7 @@ class ServerActivity : BaseActivity() {
             et_preshared_key?.text = Utils.getEditable(config.preSharedKey.orEmpty())
             et_reserved1?.text = Utils.getEditable(config.reserved ?: "0,0,0")
             et_local_address?.text = Utils.getEditable(
-                config.localAddress ?: "$WIREGUARD_LOCAL_ADDRESS_V4,$WIREGUARD_LOCAL_ADDRESS_V6"
+                config.localAddress ?: WIREGUARD_LOCAL_ADDRESS_V4
             )
             et_local_mtu?.text = Utils.getEditable(config.mtu?.toString() ?: WIREGUARD_LOCAL_MTU)
         } else if (config.configType == EConfigType.HYSTERIA2) {
@@ -422,7 +419,7 @@ class ServerActivity : BaseActivity() {
         et_public_key?.text = null
         et_reserved1?.text = Utils.getEditable("0,0,0")
         et_local_address?.text =
-            Utils.getEditable("${WIREGUARD_LOCAL_ADDRESS_V4},${WIREGUARD_LOCAL_ADDRESS_V6}")
+            Utils.getEditable(WIREGUARD_LOCAL_ADDRESS_V4)
         et_local_mtu?.text = Utils.getEditable(WIREGUARD_LOCAL_MTU)
         return true
     }
@@ -481,7 +478,7 @@ class ServerActivity : BaseActivity() {
         if (config.subscriptionId.isEmpty() && !subscriptionId.isNullOrEmpty()) {
             config.subscriptionId = subscriptionId.orEmpty()
         }
-        Log.d(ANG_PACKAGE, JsonUtil.toJsonPretty(config) ?: "")
+        //Log.i(AppConfig.TAG, JsonUtil.toJsonPretty(config) ?: "")
         MmkvManager.encodeServerConfig(editGuid, config)
         toastSuccess(R.string.toast_success)
         finish()

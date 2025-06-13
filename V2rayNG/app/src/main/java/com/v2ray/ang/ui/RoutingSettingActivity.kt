@@ -4,10 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
@@ -66,15 +65,9 @@ class RoutingSettingActivity : BaseActivity() {
         mItemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback(adapter))
         mItemTouchHelper?.attachToRecyclerView(binding.recyclerView)
 
-        val found = Utils.arrayFind(routing_domain_strategy, MmkvManager.decodeSettingsString(AppConfig.PREF_ROUTING_DOMAIN_STRATEGY) ?: "")
-        found.let { binding.spDomainStrategy.setSelection(if (it >= 0) it else 0) }
-        binding.spDomainStrategy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                MmkvManager.encodeSettings(AppConfig.PREF_ROUTING_DOMAIN_STRATEGY, routing_domain_strategy[position])
-            }
+        binding.tvDomainStrategySummary.text = getDomainStrategy()
+        binding.layoutDomainStrategy.setOnClickListener {
+            setDomainStrategy()
         }
     }
 
@@ -97,6 +90,22 @@ class RoutingSettingActivity : BaseActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
+    private fun getDomainStrategy(): String {
+        return MmkvManager.decodeSettingsString(AppConfig.PREF_ROUTING_DOMAIN_STRATEGY) ?: routing_domain_strategy.first()
+    }
+
+    private fun setDomainStrategy() {
+        android.app.AlertDialog.Builder(this).setItems(routing_domain_strategy.asList().toTypedArray()) { _, i ->
+            try {
+                val value = routing_domain_strategy[i]
+                MmkvManager.encodeSettings(AppConfig.PREF_ROUTING_DOMAIN_STRATEGY, value)
+                binding.tvDomainStrategySummary.text = value
+            } catch (e: Exception) {
+                Log.e(AppConfig.TAG, "Failed to set domain strategy", e)
+            }
+        }.show()
+    }
+
     private fun importPredefined() {
         AlertDialog.Builder(this).setItems(preset_rulesets.asList().toTypedArray()) { _, i ->
             AlertDialog.Builder(this).setMessage(R.string.routing_settings_import_rulesets_tip)
@@ -110,7 +119,7 @@ class RoutingSettingActivity : BaseActivity() {
                             }
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        Log.e(AppConfig.TAG, "Failed to import predefined ruleset", e)
                     }
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ ->
@@ -126,7 +135,7 @@ class RoutingSettingActivity : BaseActivity() {
                 val clipboard = try {
                     Utils.getClipboard(this)
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e(AppConfig.TAG, "Failed to get clipboard content", e)
                     toastError(R.string.toast_failure)
                     return@setPositiveButton
                 }

@@ -16,6 +16,7 @@ import com.v2ray.ang.databinding.ActivityAboutBinding
 import com.v2ray.ang.extension.toast
 import com.v2ray.ang.extension.toastError
 import com.v2ray.ang.extension.toastSuccess
+import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.handler.SpeedtestManager
 import com.v2ray.ang.util.Utils
 import com.v2ray.ang.util.ZipUtil
@@ -34,7 +35,7 @@ class AboutActivity : BaseActivity() {
                 try {
                     showFileChooser()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e(AppConfig.TAG, "Failed to show file chooser", e)
                 }
             } else {
                 toast(R.string.toast_permission_denied)
@@ -90,7 +91,7 @@ class AboutActivity : BaseActivity() {
                 try {
                     showFileChooser()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e(AppConfig.TAG, "Failed to show file chooser", e)
                 }
             } else {
                 requestPermissionLauncher.launch(permission)
@@ -98,15 +99,15 @@ class AboutActivity : BaseActivity() {
         }
 
         binding.layoutSoureCcode.setOnClickListener {
-            Utils.openUri(this, AppConfig.v2rayNGUrl)
+            Utils.openUri(this, AppConfig.APP_URL)
         }
 
         binding.layoutFeedback.setOnClickListener {
-            Utils.openUri(this, AppConfig.v2rayNGIssues)
+            Utils.openUri(this, AppConfig.APP_ISSUES_URL)
         }
 
         binding.layoutOssLicenses.setOnClickListener {
-            val webView = android.webkit.WebView(this);
+            val webView = android.webkit.WebView(this)
             webView.loadUrl("file:///android_asset/open_source_licenses.html")
             android.app.AlertDialog.Builder(this)
                 .setTitle("Open source licenses")
@@ -116,11 +117,11 @@ class AboutActivity : BaseActivity() {
         }
 
         binding.layoutTgChannel.setOnClickListener {
-            Utils.openUri(this, AppConfig.TgChannelUrl)
+            Utils.openUri(this, AppConfig.TG_CHANNEL_URL)
         }
 
         binding.layoutPrivacyPolicy.setOnClickListener {
-            Utils.openUri(this, AppConfig.v2rayNGPrivacyPolicy)
+            Utils.openUri(this, AppConfig.APP_PRIVACY_POLICY)
         }
 
         "v${BuildConfig.VERSION_NAME} (${SpeedtestManager.getLibVersion()})".also {
@@ -169,7 +170,7 @@ class AboutActivity : BaseActivity() {
         try {
             chooseFile.launch(Intent.createChooser(intent, getString(R.string.title_file_chooser)))
         } catch (ex: android.content.ActivityNotFoundException) {
-            Log.e(AppConfig.ANG_PACKAGE, "File chooser activity not found: ${ex.message}", ex)
+            Log.e(AppConfig.TAG, "File chooser activity not found", ex)
             toast(R.string.toast_require_file_manager)
         }
     }
@@ -192,7 +193,7 @@ class AboutActivity : BaseActivity() {
                         toastError(R.string.toast_failure)
                     }
                 } catch (e: Exception) {
-                    Log.e(AppConfig.ANG_PACKAGE, "Error during file restore: ${e.message}", e)
+                    Log.e(AppConfig.TAG, "Error during file restore", e)
                     toastError(R.string.toast_failure)
                 }
             }

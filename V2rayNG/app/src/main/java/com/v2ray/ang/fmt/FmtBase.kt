@@ -4,6 +4,7 @@ import com.v2ray.ang.AppConfig
 import com.v2ray.ang.dto.NetworkType
 import com.v2ray.ang.dto.ProfileItem
 import com.v2ray.ang.extension.isNotNullEmpty
+import com.v2ray.ang.util.HttpUtil
 import com.v2ray.ang.util.Utils
 import java.net.URI
 
@@ -18,15 +19,15 @@ open class FmtBase {
      */
     fun toUri(config: ProfileItem, userInfo: String?, dicQuery: HashMap<String, String>?): String {
         val query = if (dicQuery != null)
-            ("?" + dicQuery.toList().joinToString(
+            "?" + dicQuery.toList().joinToString(
                 separator = "&",
-                transform = { it.first + "=" + Utils.urlEncode(it.second) }))
+                transform = { it.first + "=" + Utils.urlEncode(it.second) })
         else ""
 
         val url = String.format(
             "%s@%s:%s",
             Utils.urlEncode(userInfo ?: ""),
-            Utils.getIpv6Address(config.server),
+            Utils.getIpv6Address(HttpUtil.toIdnDomain(config.server.orEmpty())),
             config.serverPort
         )
 
@@ -148,4 +149,9 @@ open class FmtBase {
 
         return dicQuery
     }
+
+    fun getServerAddress(profileItem: ProfileItem): String {
+        return HttpUtil.toIdnDomain(profileItem.server.orEmpty())
+    }
+
 }
